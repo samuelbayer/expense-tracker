@@ -22,8 +22,6 @@ async function DashboardContent() {
     redirect('/login')
   }
 
-
-
   return (
     <main>
       <p>{claims.email}</p>
