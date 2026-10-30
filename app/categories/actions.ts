@@ -44,3 +44,72 @@ export async function createCategory(
   }
   revalidatePath('/categories')
 }
+
+export async function deleteCategory( _prevState: CategoryFormState,
+  formData: FormData): Promise<CategoryFormState> {
+
+  const id = String(formData.get('id') ?? '').trim()
+
+  if (!id) return { error: 'Missing category.' }
+
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const claims = claimsData?.claims
+
+  if (!claims) {
+    redirect('/login')
+  }
+
+   const { error } = await supabase.from('categories').delete().eq('id', id)
+
+  if (error) {
+    console.error(error.code, error.message)
+    if (error.code === '23503') {
+      return { error: "This category has expenses and can't be deleted." }
+    }
+    return { error: 'Could not delete the category.' }
+  }
+  revalidatePath('/categories')
+
+}
+
+export async function editCategory(_prevState: CategoryFormState,
+  formData: FormData): Promise<CategoryFormState> {
+
+    const data = {
+    name: String(formData.get('name') ?? '').trim(),
+    color: String(formData.get('color') ?? ''),
+    id: String(formData.get('id') ?? '').trim()
+  }
+  
+  const { name, color, id } = data
+
+  const regex = /^#[0-9A-Fa-f]{6}$/;
+
+  if (name.length < 2 || name.length > 30) {
+    return { error: 'Your name has to be valid' }
+  } else if (!regex.test(color)) {
+    return { error: 'Your color has to be valid' }
+  }
+  if (!id) return { error: 'Missing category.' }
+
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const claims = claimsData?.claims
+
+  if (!claims) {
+    redirect('/login')
+  }
+
+  const { error } = await supabase.from('categories').update({ name, color }).eq('id', id)
+
+  if (error) {
+    console.error(error.code, error.message)
+    if (error.code === '23505') {
+      return { error: "You already have a category with that name." }
+    }
+    return { error: 'Could not edit the category.' }
+  }
+  revalidatePath('/categories')
+
+  }

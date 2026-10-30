@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import CategoryForm from "./category-form";
+import DeleteButton from "./delete-button";
+import EditCategory from "./edit-category-form";
 
 export default function CategoriesPage() {
 
@@ -45,9 +47,10 @@ async function CategoriesContent() {
             className="inline-block h-4 w-4 rounded-full"
             style={{ backgroundColor: cat.color }}></span>
           {cat.name}
+          <DeleteButton catId={cat.id} />
+          <EditCategory key={`${cat.id}-${cat.name}-${cat.color}`} name={cat.name} color={cat.color} catId={cat.id} />
         </li>)}
-      </ul> : <p>You don't have any categories yet.</p>}
-
+      </ul> : <p>You don&apos;t have any categories yet.</p>}
     </div>
   )
 }
