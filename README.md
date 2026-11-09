@@ -27,7 +27,7 @@ data and server-side validation.
 
 Expenses CRUD, monthly dashboard with charts, filters, tests, CI, Storybook and
 Docker. The full list, with estimates, is in the
-[open issues](..*/../issues).
+[open issues](https://github.com/samuelbayer/expense-tracker/issues).
 
 ## Tech stack
 
