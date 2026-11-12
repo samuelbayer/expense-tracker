@@ -12,7 +12,8 @@ export default function ExpenseForm({ categories }: Props) {
     <form className="p-4" action={formAction}>
       <label>
         Amount
-        <input type="text" required inputMode="decimal" name="amount" placeholder="12.50" />
+        <input type="text" required inputMode="decimal" name="amount" pattern="\d+([.,]\d{1,2})?"
+          title="Use up to 2 decimals, like 12.50" placeholder="12.50" />
       </label>
       <label>
         Spent on

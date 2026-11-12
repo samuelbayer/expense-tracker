@@ -5,6 +5,7 @@ import { Suspense } from "react"
 import ExpenseForm from "./expense-form"
 import { formatCurrency } from "@/lib/money"
 import Link from "next/link"
+import DeleteExpenseButton from "./delete-expense-button"
 
 type Expense = {
   id: string
@@ -60,6 +61,7 @@ async function ExpensesContent() {
                 <p>{expense.spent_on}</p>
                 <span aria-hidden="true" className="inline-block h-4 w-4 rounded-full" style={{ backgroundColor: expense.categories.color }} />
                 {expense.categories.name}
+                <DeleteExpenseButton expenseId={expense.id} />
               </li>
             })}
           </ul>

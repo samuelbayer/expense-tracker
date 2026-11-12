@@ -10,7 +10,7 @@ function maxAllowedDate(): string {
 
 export const expenseSchema = z.object({
   amount: z.string()
-  .refine((v) => toCents(v) !== null, 'Enter a valid amount') 
+  .refine((v) => toCents(v) !== null, 'Enter a valid amount, with up to 2 decimals (e.g. 12.50)') 
   .transform((v) => toCents(v)!)                               
   .pipe(z.number().min(1, 'Amount must be greater than 0').max(MAX_CENTS, 'Amount is too large')),
   spentOn: z.iso.date('Enter a valid date').refine((d) => d <= maxAllowedDate(), 'The date cannot be in the future'),

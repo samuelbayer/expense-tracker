@@ -51,3 +51,32 @@ export async function createExpense(
   }
   revalidatePath('/expenses')
 }
+
+export async function deleteExpense(_prevState: ExpenseFormState,
+  formData: FormData): Promise<ExpenseFormState> {
+
+    const data = {
+    id: String(formData.get('id') ?? '').trim()
+  }
+  const { id } = data
+  
+  if (!id) return { error: 'Missing expense.' }
+
+ 
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const claims = claimsData?.claims
+
+  if (!claims) {
+    redirect('/login')
+  }
+
+ 
+  const { error } = await supabase.from('expenses').delete().eq('id', id)
+
+  if (error) {
+    console.error(error.code, error.message)
+    return { error: 'Could not delete the expense.' }
+  }
+  revalidatePath('/expenses')
+}
