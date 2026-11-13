@@ -23,11 +23,8 @@ async function DashboardContent() {
   }
 
   return (
-    <main>
+    <div>
       <p>{claims.email}</p>
-      <form method="post" action="/auth/signout">
-        <button id='sign-out'>Sign out</button>
-      </form>
-    </main>
+    </div>
   )
 }
