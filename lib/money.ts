@@ -22,3 +22,8 @@ export function formatCurrency(cents: number): string {
   
   return `${formatter.format(cents / 100)}`
  }
+
+export function centsToInput(cents: number): string {
+  
+  return (cents / 100).toFixed(2)
+}

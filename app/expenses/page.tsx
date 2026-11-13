@@ -3,9 +3,10 @@ import { redirect } from "next/navigation"
 import { connection } from "next/server"
 import { Suspense } from "react"
 import ExpenseForm from "./expense-form"
-import { formatCurrency } from "@/lib/money"
+import { centsToInput, formatCurrency } from "@/lib/money"
 import Link from "next/link"
 import DeleteExpenseButton from "./delete-expense-button"
+import EditExpenseButton from "./edit-expenses"
 
 type Expense = {
   id: string
@@ -13,6 +14,7 @@ type Expense = {
   spent_on: string
   note: string | null
   categories: { name: string; color: string }
+  category_id: string
 }
 
 export default function ExpensesPage() {
@@ -39,7 +41,7 @@ async function ExpensesContent() {
 
   const { data: expenses, error } = await supabase
     .from('expenses')
-    .select('id,amount_cents, spent_on, note,categories(name, color)')
+    .select('id,amount_cents, spent_on, note,categories(name, color), category_id')
     .order('spent_on', { ascending: false })
     .overrideTypes<Expense[], { merge: false }>()
   if (error || categoriesError) {
@@ -49,10 +51,10 @@ async function ExpensesContent() {
 
   return (
     <>
-      {categories.length !== 0 ? <ExpenseForm categories={categories} /> : <Link href="/categories">You don't have any categories. Click here to create one</Link>}
+      {categories.length !== 0 ? <ExpenseForm categories={categories} /> : <Link href="/categories">You don&apos;t have any categories. Click here to create one</Link>}
       <h2>Expenses</h2>
       <div className="p-4">
-        {expenses.length === 0 ? <p>You don't have any expenses</p> :
+        {expenses.length === 0 ? <p>You don&apos;t have any expenses</p> :
           <ul>
             {expenses.map((expense) => {
               return <li className="p-3 w-50" key={expense.id}>
@@ -62,6 +64,7 @@ async function ExpensesContent() {
                 <span aria-hidden="true" className="inline-block h-4 w-4 rounded-full" style={{ backgroundColor: expense.categories.color }} />
                 {expense.categories.name}
                 <DeleteExpenseButton expenseId={expense.id} />
+                <EditExpenseButton key={`${expense.id}-${expense.amount_cents}-${expense.spent_on}-${expense.category_id}-${expense.note}`} expenseId={expense.id} amount={centsToInput(expense.amount_cents)} spentOn={expense.spent_on} categories={categories} note={expense.note ?? ''} categoryId={expense.category_id} />
               </li>
             })}
           </ul>
