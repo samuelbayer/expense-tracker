@@ -17,6 +17,8 @@ type Expense = {
   category_id: string
 }
 
+const dateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' })
+
 export default function ExpensesPage() {
 
   return (
@@ -52,24 +54,30 @@ async function ExpensesContent() {
   return (
     <>
       {categories.length !== 0 ? <ExpenseForm categories={categories} /> : <Link href="/categories">You don&apos;t have any categories. Click here to create one</Link>}
-      <h2>Expenses</h2>
-      <div className="p-4">
-        {expenses.length === 0 ? <p>You don&apos;t have any expenses</p> :
-          <ul>
-            {expenses.map((expense) => {
-              return <li className="p-3 w-50" key={expense.id}>
-                <p>{formatCurrency(expense.amount_cents)}</p>
-                <p>{expense.note}</p>
-                <p>{expense.spent_on}</p>
+      <h2 className="text-xl font-semibold my-4">Expenses</h2>
+      {expenses.length === 0 ? <p>You don&apos;t have any expenses</p> :
+        <ul className="space-y-3">
+          {expenses.map((expense) => {
+            return <li className="p-3 flex justify-between items-center gap-3 border border-zinc-800 bg-zinc-900 rounded" key={expense.id}>
+              <div className="flex gap-2 items-center">
                 <span aria-hidden="true" className="inline-block h-4 w-4 rounded-full" style={{ backgroundColor: expense.categories.color }} />
-                {expense.categories.name}
-                <DeleteExpenseButton expenseId={expense.id} />
-                <EditExpenseButton key={`${expense.id}-${expense.amount_cents}-${expense.spent_on}-${expense.category_id}-${expense.note}`} expenseId={expense.id} amount={centsToInput(expense.amount_cents)} spentOn={expense.spent_on} categories={categories} note={expense.note ?? ''} categoryId={expense.category_id} />
-              </li>
-            })}
-          </ul>
-        }
-      </div>
+                <div>
+                  <p className="font-medium">{expense.categories.name}</p>
+                  {expense.note && <p className="text-sm text-zinc-400">{expense.note}</p>}
+                  <p className="text-xs text-zinc-500">{dateFormatter.format(new Date(expense.spent_on))}</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-center font-semibold tabular-nums">{formatCurrency(expense.amount_cents)}</p>
+                <div className="flex gap-2">
+                  <DeleteExpenseButton expenseId={expense.id} />
+                  <EditExpenseButton key={`${expense.id}-${expense.amount_cents}-${expense.spent_on}-${expense.category_id}-${expense.note}`} expenseId={expense.id} amount={centsToInput(expense.amount_cents)} spentOn={expense.spent_on} categories={categories} note={expense.note ?? ''} categoryId={expense.category_id} />
+                </div>
+              </div>
+            </li>
+          })}
+        </ul>
+      }
     </>
   )
 }
