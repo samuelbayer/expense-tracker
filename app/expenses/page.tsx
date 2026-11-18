@@ -2,11 +2,11 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { connection } from "next/server"
 import { Suspense } from "react"
-import ExpenseForm from "./expense-form"
 import { centsToInput, formatCurrency } from "@/lib/money"
 import Link from "next/link"
 import DeleteExpenseButton from "./delete-expense-button"
 import EditExpenseButton from "./edit-expenses"
+import AddExpense from "./add-expense"
 
 type Expense = {
   id: string
@@ -53,8 +53,7 @@ async function ExpensesContent() {
 
   return (
     <>
-      {categories.length !== 0 ? <ExpenseForm categories={categories} /> : <Link href="/categories">You don&apos;t have any categories. Click here to create one</Link>}
-      <h2 className="text-xl font-semibold my-4">Expenses</h2>
+      {categories.length !== 0 ? <AddExpense categories={categories} /> : <> <h2 className="text-xl font-semibold">Expenses</h2> <Link href="/categories">You don&apos;t have any categories. Click here to create one</Link> </>}
       {expenses.length === 0 ? <p>You don&apos;t have any expenses</p> :
         <ul className="space-y-3">
           {expenses.map((expense) => {

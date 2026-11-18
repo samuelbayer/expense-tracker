@@ -10,7 +10,7 @@ export default function ExpenseForm({ categories }: Props) {
   const [state, formAction, isPending] = useActionState(createExpense, undefined)
 
   return (
-    <form className="p-4 flex flex-col gap-4 border border-zinc-800 bg-zinc-900 rounded" action={formAction}>
+    <form className="p-4 my-4 flex flex-col gap-4 border border-zinc-800 bg-zinc-900 rounded" action={formAction}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm text-zinc-400 flex-1" >
           Amount
@@ -37,7 +37,7 @@ export default function ExpenseForm({ categories }: Props) {
         <input className="px-3 py-2 rounded bg-zinc-950" type="text" maxLength={200} name="note" />
       </label>
       <Button className='sm:self-end bg-emerald-600 text-white hover:bg-emerald-500' disabled={isPending}>{isPending ? 'Adding...' : 'Add expense'}</Button>
-      {state?.error && <p role="alert">{state.error}</p>}
+      {state?.error && <p role="alert" className="text-sm text-red-400">{state.error}</p>}
     </form>
   )
 }
