@@ -65,7 +65,7 @@ export async function deleteCategory( _prevState: CategoryFormState,
   if (error) {
     console.error(error.code, error.message)
     if (error.code === '23503') {
-      return { error: "This category has expenses and can't be deleted." }
+      return { error: "Category in use." }
     }
     return { error: 'Could not delete the category.' }
   }
