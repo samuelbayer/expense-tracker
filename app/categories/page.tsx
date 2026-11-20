@@ -2,17 +2,16 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import CategoryForm from "./category-form";
 import DeleteButton from "./delete-button";
 import EditCategory from "./edit-category-form";
+import AddCategory from "./add-category";
 
 export default function CategoriesPage() {
 
   return (
     <>
-      <h2 className="text-xl font-semibold mb-6">Categories</h2>
       <div className="mb-6">
-        <CategoryForm />
+        <AddCategory />
       </div>
       <Suspense fallback={<div className="text-zinc-400">Loading...</div>}>
         <CategoriesContent />
@@ -58,7 +57,7 @@ async function CategoriesContent() {
           </div>
         </li>
         )}
-      </ul> : <p className="text-zinc-400">You don&apos;t have any categories yet.</p>}
+      </ul> : <p className="text-zinc-400">You don&apos;t have any categories yet. Click &quot;+ Add category&quot; to create one. </p>}
     </>
   )
 }
