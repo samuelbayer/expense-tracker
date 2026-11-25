@@ -36,13 +36,25 @@ export async function updateSession(request: NextRequest) {
   const claims = data?.claims
 
   const path = request.nextUrl.pathname
-  const esPublica = path === '/' || path === '/login'
+  const isPublic = path === '/' || path === '/login'
 
-  if (!claims && !esPublica) {
+  if (!claims && !isPublic) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
+
+  if (claims && isPublic) {
+  const url = request.nextUrl.clone()
+  url.pathname = '/dashboard'
+  const redirectResponse = NextResponse.redirect(url)
+
+  supabaseResponse.cookies.getAll().forEach((cookie) => {
+    redirectResponse.cookies.set(cookie)
+  })
+
+  return redirectResponse
+}
 
   return supabaseResponse
 }
